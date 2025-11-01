@@ -34,57 +34,56 @@ class KnowledgeCRepository:
         Returns:
             List of app usage events sorted by start time
         """
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+        with sqlite3.connect(self.db_path, timeout=5.0) as conn:
+            cursor = conn.cursor()
 
-        query = """
-        SELECT
-            COALESCE(ZSTRUCTUREDMETADATA.Z_DKDIGITALHEALTHMETADATAKEY__WEBDOMAIN,
-                     ZOBJECT.ZVALUESTRING) AS app_name,
-            COALESCE(ZSOURCE.ZBUNDLEID, 'web') AS bundle_id,
-            ZOBJECT.ZSTARTDATE AS start_time,
-            ZOBJECT.ZENDDATE AS end_time,
-            (ZOBJECT.ZENDDATE - ZOBJECT.ZSTARTDATE) AS duration
-        FROM ZOBJECT
-        LEFT JOIN ZSOURCE ON ZOBJECT.ZSOURCE = ZSOURCE.Z_PK
-        LEFT JOIN ZSTRUCTUREDMETADATA ON ZOBJECT.ZSTRUCTUREDMETADATA = ZSTRUCTUREDMETADATA.Z_PK
-        WHERE
-            (ZSTREAMNAME = '/app/usage' OR ZSTREAMNAME = '/app/webUsage')
-            AND ZOBJECT.ZSTARTDATE IS NOT NULL
-            AND ZOBJECT.ZENDDATE IS NOT NULL
-            AND ZOBJECT.ZENDDATE > ZOBJECT.ZSTARTDATE
-            AND ZOBJECT.ZSTARTDATE >= ?
-            AND ZOBJECT.ZSTARTDATE < ?
-        """
+            query = """
+            SELECT
+                COALESCE(ZSTRUCTUREDMETADATA.Z_DKDIGITALHEALTHMETADATAKEY__WEBDOMAIN,
+                         ZOBJECT.ZVALUESTRING) AS app_name,
+                COALESCE(ZSOURCE.ZBUNDLEID, 'web') AS bundle_id,
+                ZOBJECT.ZSTARTDATE AS start_time,
+                ZOBJECT.ZENDDATE AS end_time,
+                (ZOBJECT.ZENDDATE - ZOBJECT.ZSTARTDATE) AS duration
+            FROM ZOBJECT
+            LEFT JOIN ZSOURCE ON ZOBJECT.ZSOURCE = ZSOURCE.Z_PK
+            LEFT JOIN ZSTRUCTUREDMETADATA ON ZOBJECT.ZSTRUCTUREDMETADATA = ZSTRUCTUREDMETADATA.Z_PK
+            WHERE
+                (ZSTREAMNAME = '/app/usage' OR ZSTREAMNAME = '/app/webUsage')
+                AND ZOBJECT.ZSTARTDATE IS NOT NULL
+                AND ZOBJECT.ZENDDATE IS NOT NULL
+                AND ZOBJECT.ZENDDATE > ZOBJECT.ZSTARTDATE
+                AND ZOBJECT.ZSTARTDATE >= ?
+                AND ZOBJECT.ZSTARTDATE < ?
+            """
 
-        end_date_exclusive = end_date + timedelta(days=1)
-        params: list[float | str] = [
-            start_date.timestamp() - self.MACOS_EPOCH_OFFSET,
-            end_date_exclusive.timestamp() - self.MACOS_EPOCH_OFFSET,
-        ]
+            end_date_exclusive = end_date + timedelta(days=1)
+            params: list[float | str] = [
+                start_date.timestamp() - self.MACOS_EPOCH_OFFSET,
+                end_date_exclusive.timestamp() - self.MACOS_EPOCH_OFFSET,
+            ]
 
-        if app_name:
-            query += " AND COALESCE(ZSTRUCTUREDMETADATA.Z_DKDIGITALHEALTHMETADATAKEY__WEBDOMAIN, ZOBJECT.ZVALUESTRING) = ?"
-            params.append(app_name)
+            if app_name:
+                query += " AND COALESCE(ZSTRUCTUREDMETADATA.Z_DKDIGITALHEALTHMETADATAKEY__WEBDOMAIN, ZOBJECT.ZVALUESTRING) = ?"
+                params.append(app_name)
 
-        query += " ORDER BY ZOBJECT.ZSTARTDATE ASC"
+            query += " ORDER BY ZOBJECT.ZSTARTDATE ASC"
 
-        cursor.execute(query, params)
+            cursor.execute(query, params)
 
-        events = []
-        for row in cursor.fetchall():
-            app, bundle_id, start_ts, end_ts, duration = row
+            events = []
+            for row in cursor.fetchall():
+                app, bundle_id, start_ts, end_ts, duration = row
 
-            if app and duration > 0:
-                events.append(
-                    AppUsageEvent(
-                        app_name=app,
-                        bundle_id=bundle_id or "unknown",
-                        start_time=self._convert_timestamp(start_ts),
-                        end_time=self._convert_timestamp(end_ts),
-                        duration_seconds=duration,
+                if app and duration > 0:
+                    events.append(
+                        AppUsageEvent(
+                            app_name=app,
+                            bundle_id=bundle_id or "unknown",
+                            start_time=self._convert_timestamp(start_ts),
+                            end_time=self._convert_timestamp(end_ts),
+                            duration_seconds=duration,
+                        )
                     )
-                )
 
-        conn.close()
-        return events
+            return events
