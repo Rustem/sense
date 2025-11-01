@@ -37,3 +37,24 @@ class TimelineQuery(BaseModel):
     limit: int = Field(default=100, ge=1, le=1000)
     order: Literal["asc", "desc"] = "desc"
     include_system: bool = False
+
+
+class ContextSwitchSchema(BaseModel):
+    """Single context switch in switches response."""
+
+    from_app: str
+    to_app: str
+    time: datetime
+    gap_seconds: float
+
+
+class SwitchesResponse(BaseModel):
+    """Response for context switches endpoints."""
+
+    start_date: str
+    end_date: str
+    page: int
+    limit: int
+    total_switches: int
+    total_pages: int
+    switches: list[ContextSwitchSchema]

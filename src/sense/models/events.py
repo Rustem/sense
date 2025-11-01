@@ -21,3 +21,13 @@ class AppUsageEvent:
     @property
     def date(self) -> str:
         return self.start_time.strftime("%Y-%m-%d")
+
+
+@dataclass
+class ContextSwitch:
+    """Context switch between two apps."""
+
+    from_app: str
+    to_app: str
+    time: datetime
+    gap_seconds: float

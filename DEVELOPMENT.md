@@ -68,6 +68,11 @@ tests/
 └── integration/   # API tests
 ```
 
+## Design Decisions
+
+### Event Filtering
+- **In-memory filtering** (not DB-level): Events are fetched from DB without filters, then filtered in Python. This is required for context switch calculation, which needs all events to preserve temporal order and calculate accurate gaps between app switches.
+
 ## Common Tasks
 
 ### Add new endpoint

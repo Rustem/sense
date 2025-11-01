@@ -1,10 +1,10 @@
 """Timeline API routes."""
 
-import math
 from datetime import datetime
 
 from fastapi import APIRouter, HTTPException, Query
 
+from sense.api.utils import paginate, parse_date, sort_items, validate_date_range
 from sense.config import settings
 from sense.core.cache import InMemoryCache
 from sense.core.filter_service import FilterService
@@ -17,27 +17,6 @@ router = APIRouter(prefix="/timeline", tags=["timeline"])
 repository = KnowledgeCRepository(settings.knowledgec_db_path)
 filter_service = FilterService()
 cache = InMemoryCache(ttl_seconds=settings.cache_ttl_seconds)
-
-
-def parse_date(date_str: str) -> datetime:
-    """Parse YYYY-MM-DD date string to datetime."""
-    try:
-        return datetime.strptime(date_str, "%Y-%m-%d")
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=f"Invalid date format: {date_str}") from e
-
-
-def validate_date_range(start: datetime, end: datetime) -> None:
-    """Validate date range is within limits."""
-    if end < start:
-        raise HTTPException(status_code=400, detail="end_date must be >= start_date")
-
-    delta = (end - start).days
-    if delta > settings.max_date_range_days:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Date range cannot exceed {settings.max_date_range_days} days",
-        )
 
 
 @router.get("", response_model=TimelineResponse)
@@ -66,16 +45,9 @@ def get_timeline(
         events = filter_service.filter_events(events, include_system=include_system)
         cache.set(cache_key, events)
 
-    # Sort
-    if order == "desc":
-        events = sorted(events, key=lambda e: e.start_time, reverse=True)
-
-    # Paginate
-    total_events = len(events)
-    total_pages = math.ceil(total_events / limit)
-    start_idx = (page - 1) * limit
-    end_idx = start_idx + limit
-    page_events = events[start_idx:end_idx]
+    # Sort and paginate
+    events = sort_items(events, order, key=lambda e: e.start_time)
+    page_events, total_events, total_pages = paginate(events, page, limit)
 
     return TimelineResponse(
         start_date=start_date,
@@ -127,16 +99,9 @@ def get_app_timeline(
     if not events:
         raise HTTPException(status_code=404, detail=f"No events found for app: {app_name}")
 
-    # Sort
-    if order == "desc":
-        events = sorted(events, key=lambda e: e.start_time, reverse=True)
-
-    # Paginate
-    total_events = len(events)
-    total_pages = math.ceil(total_events / limit)
-    start_idx = (page - 1) * limit
-    end_idx = start_idx + limit
-    page_events = events[start_idx:end_idx]
+    # Sort and paginate
+    events = sort_items(events, order, key=lambda e: e.start_time)
+    page_events, total_events, total_pages = paginate(events, page, limit)
 
     return TimelineResponse(
         start_date=start_date,

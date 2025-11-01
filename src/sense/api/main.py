@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 
-from sense.api.routes import timeline
+from sense.api.routes import switches, timeline
 
 app = FastAPI(
     title="Sense API",
@@ -11,6 +11,7 @@ app = FastAPI(
 )
 
 app.include_router(timeline.router, prefix="/api")
+app.include_router(switches.router, prefix="/api")
 
 
 @app.get("/health")
