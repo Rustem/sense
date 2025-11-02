@@ -57,7 +57,9 @@ function shortenAppName(bundleId) {
     'com.apple.iWork.Keynote': 'Keynote',
     'com.apple.finder': 'Finder',
     'com.apple.mail': 'Mail',
-    'com.jetbrains.datagrip': 'DataGrip'
+    'com.jetbrains.datagrip': 'DataGrip',
+    'com.google.Chrome': 'Chrome',
+    'com.apple.archiveutility': 'Archive Utility'
   };
 
   return appNameMap[bundleId] || bundleId;

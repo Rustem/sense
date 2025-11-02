@@ -414,7 +414,7 @@ function renderTimelineView(events, focusApps, interruptions) {
 
   // Create groups from top apps only
   const groups = new vis.DataSet(
-    topApps.map(app => ({ id: app, content: app }))
+    topApps.map(app => ({ id: app, content: shortenAppName(app) }))
   );
 
   // Collect all focus sessions for top apps (blue/green)

@@ -1,5 +1,6 @@
 """Application configuration."""
 
+import os
 from pathlib import Path
 
 from pydantic_settings import BaseSettings
@@ -8,8 +9,19 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Application settings."""
 
+    # Environment
+    environment: str = os.getenv("SENSE_ENV", "dev")
+
     # Database
-    knowledgec_db_path: Path = Path(__file__).parent.parent.parent / "experiment" / "knowledgeC.db"
+    @property
+    def knowledgec_db_path(self) -> Path:
+        """Get database path based on environment."""
+        if self.environment == "prod":
+            # Production: use real macOS KnowledgeC database
+            return Path.home() / "Library" / "Application Support" / "Knowledge" / "knowledgeC.db"
+        else:
+            # Development: use synced copy in data/ directory
+            return Path(__file__).parent.parent.parent / "data" / "knowledgeC.db"
 
     # Cache
     cache_ttl_seconds: int = 60
