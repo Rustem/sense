@@ -58,3 +58,94 @@ class SwitchesResponse(BaseModel):
     total_switches: int
     total_pages: int
     switches: list[ContextSwitchSchema]
+
+
+class FocusSessionSchema(BaseModel):
+    """Single focus session in focus response."""
+
+    start: datetime
+    end: datetime
+    duration_minutes: float
+
+
+class AppFocusSchema(BaseModel):
+    """Focus metrics for a single app."""
+
+    app_name: str
+    total_time_minutes: float
+    total_sessions: int
+    avg_session_minutes: float
+    longest_session_minutes: float
+    focus_sessions: list[FocusSessionSchema]
+
+
+class FocusResponse(BaseModel):
+    """Response for focus endpoints (all apps)."""
+
+    start_date: str
+    end_date: str
+    page: int
+    limit: int
+    total_apps: int
+    total_pages: int
+    apps: list[AppFocusSchema]
+
+
+class AppFocusDetailResponse(BaseModel):
+    """Response for single app focus endpoint."""
+
+    app_name: str
+    start_date: str
+    end_date: str
+    total_time_minutes: float
+    total_sessions: int
+    avg_session_minutes: float
+    longest_session_minutes: float
+    shortest_session_minutes: float
+    focus_sessions: list[FocusSessionSchema]
+
+
+class InterruptionSchema(BaseModel):
+    """Single interruption in interruptions response."""
+
+    time: datetime
+    interrupted_app: str
+    interrupting_app: str
+    duration_seconds: float
+    gap_before_seconds: float
+    gap_after_seconds: float
+
+
+class AppInterruptionSummary(BaseModel):
+    """Summary of interruptions for a single app."""
+
+    app_name: str
+    count: int
+    avg_duration_seconds: float
+
+
+class InterruptionsResponse(BaseModel):
+    """Response for interruptions endpoints."""
+
+    start_date: str
+    end_date: str
+    max_interruption_seconds: int
+    page: int
+    limit: int
+    total_interruptions: int
+    total_pages: int
+    interruptions: list[InterruptionSchema]
+    summary: dict[str, list[AppInterruptionSummary]]
+
+
+class AppInterruptionsResponse(BaseModel):
+    """Response for single app interruptions endpoint."""
+
+    app_name: str
+    start_date: str
+    end_date: str
+    max_interruption_seconds: int
+    role: str
+    total_interruptions: int
+    avg_duration_seconds: float
+    interruptions: list[InterruptionSchema]

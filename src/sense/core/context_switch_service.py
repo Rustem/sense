@@ -34,8 +34,8 @@ class ContextSwitchService:
 
             switches.append(
                 ContextSwitch(
-                    from_app=current.bundle_id,
-                    to_app=next_event.bundle_id,
+                    from_app=current.app_name,
+                    to_app=next_event.app_name,
                     time=next_event.start_time,
                     gap_seconds=gap,
                 )

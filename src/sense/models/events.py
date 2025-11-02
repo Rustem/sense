@@ -31,3 +31,26 @@ class ContextSwitch:
     to_app: str
     time: datetime
     gap_seconds: float
+
+
+@dataclass
+class FocusSession:
+    """Focused work session for a single app."""
+
+    app_name: str
+    start: datetime
+    end: datetime
+    duration_minutes: float
+    event_count: int
+
+
+@dataclass
+class Interruption:
+    """An interruption event where brief app switch breaks focus flow."""
+
+    time: datetime
+    interrupted_app: str
+    interrupting_app: str
+    duration_seconds: float
+    gap_before_seconds: float
+    gap_after_seconds: float

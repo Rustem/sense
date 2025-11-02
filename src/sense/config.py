@@ -21,6 +21,12 @@ class Settings(BaseSettings):
     # Date range limits
     max_date_range_days: int = 7
 
+    # Focus sessions
+    focus_session_gap_minutes: float = 5.0
+
+    # Interruptions
+    max_interruption_seconds: int = 300  # 5 minutes
+
     # Filters
     global_blocked_domains: list[str] = [
         "pornhub.com",

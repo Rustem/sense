@@ -46,13 +46,13 @@ def test_calculate_switches_basic(service, sample_events):
     switches = service.calculate_switches(sample_events)
 
     assert len(switches) == 2
-    assert switches[0].from_app == "com.apple.mail"
-    assert switches[0].to_app == "com.apple.Safari"
+    assert switches[0].from_app == "Mail"
+    assert switches[0].to_app == "Safari"
     assert switches[0].time == datetime(2025, 10, 14, 19, 6, 34)
     assert switches[0].gap_seconds == 14.0
 
-    assert switches[1].from_app == "com.apple.Safari"
-    assert switches[1].to_app == "com.tinyspeck.slackmacgap"
+    assert switches[1].from_app == "Safari"
+    assert switches[1].to_app == "Slack"
     assert switches[1].time == datetime(2025, 10, 14, 19, 15, 2)
     assert switches[1].gap_seconds == 2.0
 
@@ -74,8 +74,8 @@ def test_calculate_switches_with_min_gap(service, sample_events):
     switches = service.calculate_switches(sample_events, min_gap_seconds=5.0)
 
     assert len(switches) == 1
-    assert switches[0].from_app == "com.apple.mail"
-    assert switches[0].to_app == "com.apple.Safari"
+    assert switches[0].from_app == "Mail"
+    assert switches[0].to_app == "Safari"
     assert switches[0].gap_seconds == 14.0
 
 
@@ -132,17 +132,17 @@ def test_filter_by_app(service, sample_events):
     all_switches = service.calculate_switches(sample_events)
 
     # Filter by Safari
-    safari_switches = service.filter_by_app(all_switches, "com.apple.Safari")
+    safari_switches = service.filter_by_app(all_switches, "Safari")
     assert len(safari_switches) == 2
     assert all(
-        s.from_app == "com.apple.Safari" or s.to_app == "com.apple.Safari"
+        s.from_app == "Safari" or s.to_app == "Safari"
         for s in safari_switches
     )
 
     # Filter by Mail
-    mail_switches = service.filter_by_app(all_switches, "com.apple.mail")
+    mail_switches = service.filter_by_app(all_switches, "Mail")
     assert len(mail_switches) == 1
-    assert mail_switches[0].from_app == "com.apple.mail"
+    assert mail_switches[0].from_app == "Mail"
 
     # Filter by non-existent app
     none_switches = service.filter_by_app(all_switches, "com.nonexistent")
