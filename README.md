@@ -1,5 +1,10 @@
 # Sense
 
+![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
+
 macOS activity tracker using KnowledgeC database. Track focus time, context switches, and usage patterns.
 
 ## Features

@@ -119,3 +119,14 @@ uv add package-name
 # Update all
 uv sync --all-extras
 ```
+
+## Technical Debt
+
+### CI/CD and Code Quality
+- **Test coverage badge**: Set up Codecov or Coveralls integration for automated coverage reporting
+  - Add GitHub Actions workflow for running tests
+  - Configure coverage upload to badge service
+  - Add badge to README: `[![codecov](https://codecov.io/gh/username/sense/branch/main/graph/badge.svg)](https://codecov.io/gh/username/sense)`
+- **Build status badge**: Add GitHub Actions workflow for CI/CD
+  - Run tests, linting, and type checking on PR/push
+  - Add build status badge to README
