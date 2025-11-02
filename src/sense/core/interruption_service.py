@@ -38,6 +38,8 @@ class InterruptionService:
             next_event = events[i + 2]
 
             # Check if pattern matches: A → B → A
+            # A is the app being interrupted (deep work app that you return to)
+            # B is the interrupting app (brief distraction in the middle)
             if prev_event.app_name == next_event.app_name and prev_event.app_name != middle_event.app_name:
                 # Check if middle event is brief enough to be an interruption
                 if middle_event.duration_seconds <= max_interruption_seconds:
