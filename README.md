@@ -97,6 +97,14 @@ uv run uvicorn sense.api.main:app --reload
 - Python 3.11+
 - Access to `~/Library/Application Support/Knowledge/knowledgeC.db`
 
+## Support
+
+If you find Sense useful:
+- ⭐ **Star this repo** to show your support
+- ☕ **[Buy me a coffee](https://buymeacoffee.com/rkamun)** to fuel development
+
+Your support helps keep this project maintained and improved!
+
 ## License
 
 MIT

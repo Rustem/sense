@@ -37,7 +37,7 @@ def get_switches(
     validate_date_range(start, end)
 
     # Generate cache key
-    cache_key = f"switches:{start_date}:{end_date}"
+    cache_key = f"switches:{start_date}:{end_date}:{include_system}:{min_gap_seconds}"
     cached = cache.get(cache_key)
     if cached:
         switches = cached

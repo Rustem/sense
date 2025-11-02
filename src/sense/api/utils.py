@@ -44,9 +44,8 @@ def sort_items(items: list[T], order: str, key: Callable[[T], Any]) -> list[T]:
     Returns:
         Sorted list
     """
-    if order == "desc":
-        return sorted(items, key=key, reverse=True)
-    return items
+    reverse = order == "desc"
+    return sorted(items, key=key, reverse=reverse)
 
 
 def paginate(items: list[T], page: int, limit: int) -> tuple[list[T], int, int]:
