@@ -26,6 +26,19 @@ macOS activity tracker using KnowledgeC database. Track focus time, context swit
 ![Hourly context switching activity and app timeline](images/Dashboard%20bottom.png)
 *Hourly context switching trends and visual timeline of app usage*
 
+## Prerequisites
+
+1. **Grant Full Disk Access** to your Terminal application:
+   - Open **System Settings** → **Privacy & Security** → **Full Disk Access**
+   - Click **+** and add your terminal app (Terminal.app, iTerm, etc.)
+   - Restart your terminal
+
+2. **Sync the KnowledgeC database**:
+   ```bash
+   ./scripts/sync_db.sh
+   ```
+   This copies the database to avoid permission issues during development.
+
 ## Quick Start
 
 ```bash
