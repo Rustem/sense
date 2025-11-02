@@ -28,16 +28,10 @@ macOS activity tracker using KnowledgeC database. Track focus time, context swit
 
 ## Prerequisites
 
-1. **Grant Full Disk Access** to your Terminal application:
-   - Open **System Settings** → **Privacy & Security** → **Full Disk Access**
-   - Click **+** and add your terminal app (Terminal.app, iTerm, etc.)
-   - Restart your terminal
-
-2. **Sync the KnowledgeC database**:
-   ```bash
-   ./scripts/sync_db.sh
-   ```
-   This copies the database to avoid permission issues during development.
+**Grant Full Disk Access** to your Terminal application:
+- Open **System Settings** → **Privacy & Security** → **Full Disk Access**
+- Click **+** and add your terminal app (Terminal.app, iTerm, etc.)
+- Restart your terminal
 
 ## Quick Start
 
@@ -45,8 +39,8 @@ macOS activity tracker using KnowledgeC database. Track focus time, context swit
 # Install dependencies
 uv sync
 
-# Run dashboard
-uv run sense serve
+# Run dashboard (production mode - uses real KnowledgeC database)
+SENSE_ENV=prod uv run uvicorn sense.api.main:app
 
 # Open browser
 open http://localhost:8000
@@ -84,11 +78,17 @@ curl http://localhost:8000/api/switches/top?limit=10
 # Install dev dependencies
 uv sync --all-extras
 
+# Sync the KnowledgeC database (for development mode)
+./scripts/sync_db.sh
+
 # Run tests
 uv run pytest
 
-# Run locally
+# Run locally (dev environment - uses data/knowledgeC.db)
 uv run uvicorn sense.api.main:app --reload
+
+# Run with production database (uses ~/Library/Application Support/Knowledge/knowledgeC.db)
+SENSE_ENV=prod uv run uvicorn sense.api.main:app --reload
 ```
 
 ## Requirements
