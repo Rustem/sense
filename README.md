@@ -15,17 +15,6 @@ macOS activity tracker using KnowledgeC database. Track focus time, context swit
 - **Web Dashboard** - Local-first visualization
 - **MCP Server** - Query stats via Claude
 
-## Screenshots
-
-![Daily overview with focus apps and interruption patterns](images/Dashboard%20top%20page.png)
-*Daily metrics, insights, and top focus apps with interruption patterns*
-
-![Context switch timeline showing app transitions](images/Dashboard%20context%20switches.png)
-*Detailed context switch timeline with timestamp and app transitions*
-
-![Hourly context switching activity and app timeline](images/Dashboard%20bottom.png)
-*Hourly context switching trends and visual timeline of app usage*
-
 ## Prerequisites
 
 **Grant Full Disk Access** to your Terminal application:
