@@ -42,17 +42,27 @@
             background-color: #ef4444 !important;
             border-color: #dc2626 !important;
         }
-        /* Flatpickr - highlight dates with activity */
-        .flatpickr-day.has-activity {
+        .flatpickr-day.activity-low {
             background-color: #dbeafe !important;
-            border-color: #3b82f6 !important;
+            border-color: #93c5fd !important;
+        }
+        .flatpickr-day.activity-medium {
+            background-color: #93c5fd !important;
+            border-color: #60a5fa !important;
+            font-weight: 600;
+        }
+        .flatpickr-day.activity-high {
+            background-color: #3b82f6 !important;
+            border-color: #2563eb !important;
+            color: white !important;
             font-weight: 600;
         }
         .flatpickr-day.has-activity:hover {
-            background-color: #bfdbfe !important;
+            opacity: 0.8;
         }
-        .flatpickr-day.has-activity.selected {
-            background-color: #3b82f6 !important;
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+            background-color: #1e40af !important;
+            border-color: #1e3a8a !important;
             color: white !important;
         }
     </style>
@@ -60,13 +70,24 @@
 <body class="bg-gray-50">
     <!-- Header -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-semibold text-gray-900">Sense</h1>
-            <div class="flex items-center gap-4">
-                <input type="text"
-                       id="date-picker"
-                       placeholder="Select date..."
-                       class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900">Sense</h1>
+                    <p id="date-range-display" class="text-sm text-gray-500 mt-0.5"></p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="flex gap-2">
+                        <button id="filter-3days" class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Last 3 Days</button>
+                        <button id="filter-week" class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Last Week</button>
+                        <button id="filter-month" class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Last Month</button>
+                    </div>
+                    <div class="w-px h-6 bg-gray-300"></div>
+                    <input type="text"
+                           id="date-picker"
+                           placeholder="Select date..."
+                           class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
             </div>
         </div>
     </header>
@@ -77,6 +98,7 @@
             <div class="bg-white rounded-lg border border-gray-200 p-6">
                 <div class="text-sm text-gray-500 mb-1">Active Time</div>
                 <div id="active-time" class="metric-value text-3xl font-bold text-gray-900">-</div>
+                <div id="active-time-subtitle" class="text-xs text-gray-400 mt-1"></div>
             </div>
             <div class="bg-white rounded-lg border border-gray-200 p-6">
                 <div class="text-sm text-gray-500 mb-1">Focus Sessions</div>
@@ -113,34 +135,30 @@
 
         <!-- Charts Grid -->
         <div class="grid grid-cols-2 gap-6 mb-8">
-            <!-- Focus Sessions -->
             <div class="bg-white rounded-lg border border-gray-200 p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">Top 5 Focus Apps</h2>
+                <h2 id="focus-chart-title" class="text-lg font-semibold text-gray-900 mb-4">Top 5 Focus Apps</h2>
                 <div class="h-64">
                     <canvas id="focus-chart"></canvas>
                 </div>
             </div>
 
-            <!-- Interruption Patterns -->
             <div class="bg-white rounded-lg border border-gray-200 p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">Top 5 Interruption Patterns</h2>
+                <h2 id="interrupters-chart-title" class="text-lg font-semibold text-gray-900 mb-4">Top 5 Interruption Patterns</h2>
                 <div class="h-64">
                     <canvas id="interrupters-chart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Top Switch Patterns -->
         <div class="bg-white rounded-lg border border-gray-200 p-6 mb-8">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Top 5 Switch Patterns</h2>
+            <h2 id="switch-patterns-chart-title" class="text-lg font-semibold text-gray-900 mb-4">Top 5 Switch Patterns</h2>
             <div class="h-64">
                 <canvas id="switch-patterns-chart"></canvas>
             </div>
         </div>
 
-        <!-- Context Switches Trend -->
         <div class="bg-white rounded-lg border border-gray-200 p-6 mb-8">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Context Switches (Hourly)</h2>
+            <h2 id="switches-chart-title" class="text-lg font-semibold text-gray-900 mb-4">Context Switches (Hourly)</h2>
             <div class="h-64">
                 <canvas id="switches-chart"></canvas>
             </div>

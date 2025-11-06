@@ -22,6 +22,11 @@ async function fetchInterruptions(date) {
   return fetchJson(url);
 }
 
+async function fetchTimelineRange(startDate, endDate) {
+  const url = `${API_BASE}/timeline?start_date=${startDate}&end_date=${endDate}&limit=10000&include_system=false`;
+  return fetchJson(url);
+}
+
 /**
  * Generic JSON fetch with error handling
  * @param {string} url - URL to fetch
